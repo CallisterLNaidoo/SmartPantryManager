@@ -1,5 +1,6 @@
 package com.example.smartpantrymanager;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ListView;
@@ -15,6 +16,7 @@ public class SuggestedRecipesActivity extends AppCompatActivity {
     private TextView txtNoRecipes;
 
     private DatabaseHelper databaseHelper;
+    private List<Recipe> recipeList;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -29,6 +31,36 @@ public class SuggestedRecipesActivity extends AppCompatActivity {
 
         databaseHelper =
                 new DatabaseHelper(this);
+
+        listSuggestedRecipes.setOnItemClickListener(
+                (parent, view, position, id) -> {
+
+                    Recipe selectedRecipe =
+                            recipeList.get(position);
+
+                    Intent intent = new Intent(
+                            SuggestedRecipesActivity.this,
+                            RecipeDetailActivity.class
+                    );
+
+                    intent.putExtra(
+                            "recipe_id",
+                            selectedRecipe.getId()
+                    );
+
+                    intent.putExtra(
+                            "recipe_name",
+                            selectedRecipe.getName()
+                    );
+
+                    intent.putExtra(
+                            "recipe_steps",
+                            selectedRecipe.getSteps()
+                    );
+
+                    startActivity(intent);
+                }
+        );
     }
 
     @Override
@@ -40,10 +72,10 @@ public class SuggestedRecipesActivity extends AppCompatActivity {
 
     private void loadSuggestedRecipes() {
 
-        List<Recipe> recipes =
+        recipeList =
                 databaseHelper.getSuggestedRecipes();
 
-        if (recipes.isEmpty()) {
+        if (recipeList.isEmpty()) {
 
             txtNoRecipes.setVisibility(View.VISIBLE);
             listSuggestedRecipes.setVisibility(View.GONE);
@@ -56,7 +88,7 @@ public class SuggestedRecipesActivity extends AppCompatActivity {
             RecipeAdapter adapter =
                     new RecipeAdapter(
                             this,
-                            recipes
+                            recipeList
                     );
 
             listSuggestedRecipes.setAdapter(adapter);

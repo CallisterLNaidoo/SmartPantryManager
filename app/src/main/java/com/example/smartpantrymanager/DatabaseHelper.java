@@ -656,4 +656,57 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
         return -1;
     }
+    public String getRecipeIngredientsText(int recipeId) {
+
+        SQLiteDatabase db = this.getReadableDatabase();
+
+        Cursor cursor = db.rawQuery(
+                "SELECT ingredient_name, quantity, unit " +
+                        "FROM " + TABLE_RECIPE_INGREDIENTS +
+                        " WHERE recipe_id = ?",
+                new String[]{String.valueOf(recipeId)}
+        );
+
+        StringBuilder ingredientsText = new StringBuilder();
+
+        if (cursor.moveToFirst()) {
+
+            do {
+
+                String name = cursor.getString(
+                        cursor.getColumnIndexOrThrow("ingredient_name")
+                );
+
+                double quantity = cursor.getDouble(
+                        cursor.getColumnIndexOrThrow("quantity")
+                );
+
+                String unit = cursor.getString(
+                        cursor.getColumnIndexOrThrow("unit")
+                );
+
+                String quantityText;
+
+                if (quantity == (int) quantity) {
+                    quantityText = String.valueOf((int) quantity);
+                } else {
+                    quantityText = String.valueOf(quantity);
+                }
+
+                ingredientsText
+                        .append("• ")
+                        .append(quantityText)
+                        .append(" ")
+                        .append(unit)
+                        .append(" ")
+                        .append(name)
+                        .append("\n");
+
+            } while (cursor.moveToNext());
+        }
+
+        cursor.close();
+
+        return ingredientsText.toString();
+    }
 }
