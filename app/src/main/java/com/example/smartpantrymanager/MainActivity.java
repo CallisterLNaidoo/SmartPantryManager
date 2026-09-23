@@ -13,6 +13,7 @@ public class MainActivity extends AppCompatActivity {
 
     private Button btnAddIngredient;
     private Button btnSuggestedRecipes;
+    private Button btnSettings;
     private ListView listPantry;
 
     private DatabaseHelper databaseHelper;
@@ -25,6 +26,7 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         btnAddIngredient = findViewById(R.id.btnAddIngredient);
+        btnSettings = findViewById(R.id.btnSettings);
         btnSuggestedRecipes = findViewById(R.id.btnSuggestedRecipes);
         listPantry = findViewById(R.id.listPantry);
 
@@ -48,6 +50,15 @@ public class MainActivity extends AppCompatActivity {
             Intent intent = new Intent(
                     MainActivity.this,
                     SuggestedRecipesActivity.class
+            );
+
+            startActivity(intent);
+        });
+        btnSettings.setOnClickListener(v -> {
+
+            Intent intent = new Intent(
+                    MainActivity.this,
+                    SettingsActivity.class
             );
 
             startActivity(intent);
