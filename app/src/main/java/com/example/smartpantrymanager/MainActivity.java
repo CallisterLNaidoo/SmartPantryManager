@@ -12,6 +12,7 @@ import java.util.List;
 public class MainActivity extends AppCompatActivity {
 
     private Button btnAddIngredient;
+    private Button btnSuggestedRecipes;
     private ListView listPantry;
 
     private DatabaseHelper databaseHelper;
@@ -24,10 +25,13 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         btnAddIngredient = findViewById(R.id.btnAddIngredient);
+        btnSuggestedRecipes = findViewById(R.id.btnSuggestedRecipes);
         listPantry = findViewById(R.id.listPantry);
 
         databaseHelper = new DatabaseHelper(this);
+        databaseHelper.seedRecipesIfNeeded();
 
+        // Add Ingredient button
         btnAddIngredient.setOnClickListener(v -> {
 
             Intent intent = new Intent(
@@ -37,6 +41,19 @@ public class MainActivity extends AppCompatActivity {
 
             startActivity(intent);
         });
+
+        // Suggested Recipes button
+        btnSuggestedRecipes.setOnClickListener(v -> {
+
+            Intent intent = new Intent(
+                    MainActivity.this,
+                    SuggestedRecipesActivity.class
+            );
+
+            startActivity(intent);
+        });
+
+        // Open ingredient for editing
         listPantry.setOnItemClickListener((parent, view, position, id) -> {
 
             Ingredient selectedIngredient = ingredientList.get(position);
@@ -48,9 +65,15 @@ public class MainActivity extends AppCompatActivity {
 
             intent.putExtra("ingredient_id", selectedIngredient.getId());
             intent.putExtra("ingredient_name", selectedIngredient.getName());
-            intent.putExtra("ingredient_quantity", selectedIngredient.getQuantity());
+            intent.putExtra(
+                    "ingredient_quantity",
+                    selectedIngredient.getQuantity()
+            );
             intent.putExtra("ingredient_unit", selectedIngredient.getUnit());
-            intent.putExtra("ingredient_expiry", selectedIngredient.getExpiryDate());
+            intent.putExtra(
+                    "ingredient_expiry",
+                    selectedIngredient.getExpiryDate()
+            );
 
             startActivity(intent);
         });
