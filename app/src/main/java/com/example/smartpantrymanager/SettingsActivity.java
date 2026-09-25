@@ -1,10 +1,13 @@
 package com.example.smartpantrymanager;
 
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.widget.Switch;
 
 import androidx.appcompat.app.AppCompatActivity;
+
+import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 public class SettingsActivity extends AppCompatActivity {
 
@@ -18,6 +21,7 @@ public class SettingsActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_settings);
 
+        // SETTINGS PREFERENCES
         switchExpiryReminders =
                 findViewById(R.id.switchExpiryReminders);
 
@@ -37,5 +41,53 @@ public class SettingsActivity extends AppCompatActivity {
                             .apply();
                 }
         );
+
+        // BOTTOM NAVIGATION
+        BottomNavigationView bottomNavigation =
+                findViewById(R.id.bottomNavigation);
+
+        bottomNavigation.setSelectedItemId(R.id.navSettings);
+
+        bottomNavigation.setOnItemSelectedListener(item -> {
+
+            int itemId = item.getItemId();
+
+            if (itemId == R.id.navPantry) {
+
+                Intent intent = new Intent(
+                        SettingsActivity.this,
+                        MainActivity.class
+                );
+
+                intent.addFlags(
+                        Intent.FLAG_ACTIVITY_CLEAR_TOP |
+                                Intent.FLAG_ACTIVITY_SINGLE_TOP
+                );
+
+                startActivity(intent);
+                return true;
+
+            } else if (itemId == R.id.navRecipes) {
+
+                Intent intent = new Intent(
+                        SettingsActivity.this,
+                        SuggestedRecipesActivity.class
+                );
+
+                intent.addFlags(
+                        Intent.FLAG_ACTIVITY_CLEAR_TOP |
+                                Intent.FLAG_ACTIVITY_SINGLE_TOP
+                );
+
+                startActivity(intent);
+                return true;
+
+            } else if (itemId == R.id.navSettings) {
+
+                return true;
+            }
+
+            return false;
+        });
     }
 }

@@ -5,6 +5,8 @@ import android.os.Bundle;
 import android.widget.Button;
 import android.widget.ListView;
 
+import com.google.android.material.bottomnavigation.BottomNavigationView;
+
 import androidx.appcompat.app.AppCompatActivity;
 
 import java.util.List;
@@ -29,6 +31,43 @@ public class MainActivity extends AppCompatActivity {
         btnSettings = findViewById(R.id.btnSettings);
         btnSuggestedRecipes = findViewById(R.id.btnSuggestedRecipes);
         listPantry = findViewById(R.id.listPantry);
+
+        BottomNavigationView bottomNavigation =
+                findViewById(R.id.bottomNavigation);
+
+        bottomNavigation.setSelectedItemId(R.id.navPantry);
+
+        bottomNavigation.setOnItemSelectedListener(item -> {
+
+            int itemId = item.getItemId();
+
+            if (itemId == R.id.navPantry) {
+
+                return true;
+
+            } else if (itemId == R.id.navRecipes) {
+
+                Intent intent = new Intent(
+                        MainActivity.this,
+                        SuggestedRecipesActivity.class
+                );
+
+                startActivity(intent);
+                return true;
+
+            } else if (itemId == R.id.navSettings) {
+
+                Intent intent = new Intent(
+                        MainActivity.this,
+                        SettingsActivity.class
+                );
+
+                startActivity(intent);
+                return true;
+            }
+
+            return false;
+        });
 
         databaseHelper = new DatabaseHelper(this);
         databaseHelper.seedRecipesIfNeeded();

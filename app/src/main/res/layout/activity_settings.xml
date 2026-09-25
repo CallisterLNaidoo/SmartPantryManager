@@ -1,41 +1,56 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/main"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:padding="20dp">
+    android:padding="10dp">
 
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:gravity="center"
+        android:padding="16dp"
         android:text="Settings"
         android:textSize="26sp"
-        android:textStyle="bold"
-        android:gravity="center"
-        android:paddingBottom="30dp" />
+        android:textStyle="bold" />
 
-    <TextView
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:orientation="vertical"
+        android:padding="10dp">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingBottom="15dp"
+            android:text="Pantry Preferences"
+            android:textSize="20sp"
+            android:textStyle="bold" />
+
+        <Switch
+            android:id="@+id/switchExpiryReminders"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="10dp"
+            android:text="Show expiry reminders"
+            android:textSize="16sp" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingTop="10dp"
+            android:text="When enabled, the app can alert you about ingredients that are close to their expiry date."
+            android:textSize="14sp" />
+
+    </LinearLayout>
+
+    <com.google.android.material.bottomnavigation.BottomNavigationView
+        android:id="@+id/bottomNavigation"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Pantry Preferences"
-        android:textSize="20sp"
-        android:textStyle="bold"
-        android:paddingBottom="15dp" />
-
-    <Switch
-        android:id="@+id/switchExpiryReminders"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Show expiry reminders"
-        android:textSize="16sp"
-        android:padding="10dp" />
-
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="When enabled, the app can alert you about ingredients that are close to their expiry date."
-        android:textSize="14sp"
-        android:paddingTop="10dp" />
+        app:menu="@menu/bottom_nav_menu" />
 
 </LinearLayout>
