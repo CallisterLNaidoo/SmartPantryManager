@@ -11,7 +11,7 @@
         android:id="@+id/txtTitle"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Smart Pantry Manager"
+        android:text="@string/app_title"
         android:textSize="26sp"
         android:textStyle="bold"
         android:gravity="center"
@@ -21,7 +21,7 @@
         android:id="@+id/txtPantryHeading"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="My Pantry"
+        android:text="@string/my_pantry"
         android:textSize="20sp"
         android:textStyle="bold"
         android:paddingBottom="10dp" />
@@ -48,20 +48,20 @@
         android:id="@+id/btnSuggestedRecipes"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Suggested Recipes"
+        android:text="@string/suggested_recipes"
         android:layout_marginBottom="10dp" />
 
     <Button
         android:id="@+id/btnSettings"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Settings" />
+        android:text="@string/settings" />
 
     <Button
         android:id="@+id/btnAddIngredient"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Add Ingredient" />
+        android:text="@string/add_ingredient" />
 
     <com.google.android.material.bottomnavigation.BottomNavigationView
         android:id="@+id/bottomNavigation"

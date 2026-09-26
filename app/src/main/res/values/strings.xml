@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <!-- APP NAME -->
+    <string name="app_name">SmartPantryManager</string>
+    <string name="app_title">Smart Pantry Manager</string>
+
+    <!-- MAIN SCREEN -->
+    <string name="my_pantry">My Pantry</string>
+    <string name="add_ingredient">Add Ingredient</string>
+    <string name="suggested_recipes">Suggested Recipes</string>
+    <string name="settings">Settings</string>
+
+    <!-- BOTTOM NAVIGATION -->
+    <string name="nav_pantry">Pantry</string>
+    <string name="nav_recipes">Recipes</string>
+    <string name="nav_settings">Settings</string>
+
+    <!-- SETTINGS SCREEN -->
+    <string name="pantry_preferences">Pantry Preferences</string>
+    <string name="show_expiry_reminders">Show expiry reminders</string>
+    <string name="expiry_description">When enabled, the app displays reminders for ingredients that are close to their expiry date.</string>
+
+    <!-- RECIPE SCREENS -->
+    <string name="recipe_name">Recipe Name</string>
+    <string name="ingredients">Ingredients</string>
+    <string name="ingredients_placeholder">Ingredients will appear here</string>
+    <string name="method">Method</string>
+    <string name="method_placeholder">Recipe method will appear here</string>
+    <string name="no_recipes">No recipes match your pantry yet. Add more ingredients.</string>
+
+    <!-- INGREDIENT SCREEN -->
+    <string name="edit_ingredient">Edit Ingredient</string>
+    <string name="update_ingredient">Update Ingredient</string>
+    <string name="delete_ingredient">Delete Ingredient</string>
+    <string name="save_ingredient">Save Ingredient</string>
+
+    <string name="ingredient_name">Ingredient Name</string>
+    <string name="ingredient_name_hint">e.g. Eggs</string>
+
+    <string name="quantity">Quantity</string>
+    <string name="quantity_hint">e.g. 6</string>
+
+    <string name="unit">Unit</string>
+    <string name="unit_hint">e.g. pcs, g, ml</string>
+
+    <string name="expiry_date_optional">Expiry Date (Optional)</string>
+    <string name="expiry_date_hint">yyyy-MM-dd</string>
+
+    <!-- EXPIRY REMINDERS -->
+    <string name="expiry_reminders_title">Expiry Reminders</string>
+    <string name="expiry_reminder_message">Expiry Reminders\n\n%1$s</string>
+
+</resources>
+

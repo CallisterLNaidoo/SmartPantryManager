@@ -14,7 +14,7 @@
             android:id="@+id/txtRecipeDetailName"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Recipe Name"
+            android:text="@string/recipe_name"
             android:textSize="26sp"
             android:textStyle="bold"
             android:gravity="center"
@@ -23,7 +23,7 @@
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Ingredients"
+            android:text="@string/ingredients"
             android:textSize="20sp"
             android:textStyle="bold"
             android:paddingBottom="10dp" />
@@ -32,14 +32,14 @@
             android:id="@+id/txtRecipeIngredients"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Ingredients will appear here"
+            android:text="@string/ingredients_placeholder"
             android:textSize="16sp"
             android:paddingBottom="25dp" />
 
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Method"
+            android:text="@string/method"
             android:textSize="20sp"
             android:textStyle="bold"
             android:paddingBottom="10dp" />
@@ -48,7 +48,7 @@
             android:id="@+id/txtRecipeSteps"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Recipe method will appear here"
+            android:text="@string/method_placeholder"
             android:textSize="16sp" />
 
     </LinearLayout>
