@@ -26,6 +26,18 @@
         android:textStyle="bold"
         android:paddingBottom="10dp" />
 
+    <!-- EXPIRY REMINDER MESSAGE -->
+    <TextView
+        android:id="@+id/txtExpiryReminders"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="10dp"
+        android:background="#FFF3CD"
+        android:padding="12dp"
+        android:textColor="#664D03"
+        android:textSize="14sp"
+        android:visibility="gone" />
+
     <ListView
         android:id="@+id/listPantry"
         android:layout_width="match_parent"
