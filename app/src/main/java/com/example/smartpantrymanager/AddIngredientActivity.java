@@ -9,6 +9,10 @@ import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Locale;
+
 public class AddIngredientActivity extends AppCompatActivity {
 
     private EditText txtIngredientName;
@@ -67,9 +71,13 @@ public class AddIngredientActivity extends AppCompatActivity {
             txtExpiryDate.setText(expiry);
         }
 
-        btnSaveIngredient.setOnClickListener(v -> saveOrUpdateIngredient());
+        btnSaveIngredient.setOnClickListener(
+                v -> saveOrUpdateIngredient()
+        );
 
-        btnDeleteIngredient.setOnClickListener(v -> deleteIngredient());
+        btnDeleteIngredient.setOnClickListener(
+                v -> deleteIngredient()
+        );
     }
 
     private void saveOrUpdateIngredient() {
@@ -86,18 +94,17 @@ public class AddIngredientActivity extends AppCompatActivity {
         String expiryDate =
                 txtExpiryDate.getText().toString().trim();
 
+        // VALIDATE INGREDIENT NAME
         if (name.isEmpty()) {
             txtIngredientName.setError("Enter ingredient name");
+            txtIngredientName.requestFocus();
             return;
         }
 
+        // VALIDATE QUANTITY
         if (quantityText.isEmpty()) {
             txtQuantity.setError("Enter quantity");
-            return;
-        }
-
-        if (unit.isEmpty()) {
-            txtUnit.setError("Enter unit");
+            txtQuantity.requestFocus();
             return;
         }
 
@@ -105,16 +112,43 @@ public class AddIngredientActivity extends AppCompatActivity {
 
         try {
             quantity = Double.parseDouble(quantityText);
+
         } catch (NumberFormatException e) {
             txtQuantity.setError("Enter a valid quantity");
+            txtQuantity.requestFocus();
             return;
         }
 
-        if (quantity <= 0) {
-            txtQuantity.setError("Quantity must be greater than 0");
+        if (Double.isNaN(quantity)
+                || Double.isInfinite(quantity)
+                || quantity <= 0) {
+
+            txtQuantity.setError(
+                    "Quantity must be a number greater than 0"
+            );
+            txtQuantity.requestFocus();
             return;
         }
 
+        // VALIDATE UNIT
+        if (unit.isEmpty()) {
+            txtUnit.setError("Enter unit, e.g. pcs, g or ml");
+            txtUnit.requestFocus();
+            return;
+        }
+
+        // VALIDATE OPTIONAL EXPIRY DATE
+        if (!expiryDate.isEmpty() && !isValidDate(expiryDate)) {
+
+            txtExpiryDate.setError(
+                    "Enter a valid date in yyyy-MM-dd format"
+            );
+
+            txtExpiryDate.requestFocus();
+            return;
+        }
+
+        // ADD NEW INGREDIENT
         if (ingredientId == -1) {
 
             boolean inserted =
@@ -146,6 +180,7 @@ public class AddIngredientActivity extends AppCompatActivity {
 
         } else {
 
+            // UPDATE EXISTING INGREDIENT
             boolean updated =
                     databaseHelper.updateIngredient(
                             ingredientId,
@@ -176,6 +211,32 @@ public class AddIngredientActivity extends AppCompatActivity {
         }
     }
 
+    // CHECK WHETHER THE DATE IS VALID
+    private boolean isValidDate(String dateText) {
+
+        // Check the required format first
+        if (!dateText.matches("\\d{4}-\\d{2}-\\d{2}")) {
+            return false;
+        }
+
+        SimpleDateFormat dateFormat =
+                new SimpleDateFormat("yyyy-MM-dd", Locale.US);
+
+        // Do not automatically correct invalid dates
+        dateFormat.setLenient(false);
+
+        try {
+
+            dateFormat.parse(dateText);
+            return true;
+
+        } catch (ParseException e) {
+
+            return false;
+        }
+    }
+
+    // DELETE EXISTING INGREDIENT
     private void deleteIngredient() {
 
         boolean deleted =
