@@ -27,6 +27,7 @@ public class MainActivity extends AppCompatActivity {
 
     private ListView listPantry;
     private TextView txtExpiryReminders;
+    private TextView txtEmptyPantry;
 
     private DatabaseHelper databaseHelper;
     private IngredientAdapter ingredientAdapter;
@@ -47,6 +48,10 @@ public class MainActivity extends AppCompatActivity {
         listPantry = findViewById(R.id.listPantry);
 
         txtExpiryReminders = findViewById(R.id.txtExpiryReminders);
+        txtEmptyPantry = findViewById(R.id.txtEmptyPantry);
+
+        // DISPLAY EMPTY MESSAGE WHEN PANTRY HAS NO ITEMS
+        listPantry.setEmptyView(txtEmptyPantry);
 
         // BOTTOM NAVIGATION
         BottomNavigationView bottomNavigation =
@@ -173,11 +178,12 @@ public class MainActivity extends AppCompatActivity {
         loadIngredients();
     }
 
-
     // LOAD PANTRY INGREDIENTS
     private void loadIngredients() {
 
         ingredientList = databaseHelper.getAllIngredients();
+
+
 
         ingredientAdapter = new IngredientAdapter(
                 this,
@@ -298,7 +304,10 @@ public class MainActivity extends AppCompatActivity {
         if (reminderCount > 0) {
 
             txtExpiryReminders.setText(
-                    "Expiry Reminders\n\n" + reminderText.toString().trim()
+                    getString(
+                            R.string.expiry_reminder_message,
+                            reminderText.toString().trim()
+                    )
             );
 
             txtExpiryReminders.setVisibility(View.VISIBLE);
