@@ -9,6 +9,11 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.graphics.Insets;
+import androidx.core.view.ViewCompat;
+import androidx.core.view.WindowCompat;
+import androidx.core.view.WindowInsetsCompat;
+import androidx.core.view.WindowInsetsControllerCompat;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
@@ -22,8 +27,6 @@ import java.util.Locale;
 public class MainActivity extends AppCompatActivity {
 
     private Button btnAddIngredient;
-    private Button btnSuggestedRecipes;
-    private Button btnSettings;
 
     private ListView listPantry;
     private TextView txtExpiryReminders;
@@ -41,16 +44,52 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        // KEEP CONTENT CLEAR OF STATUS BAR AND CAMERA CUTOUT
+        View mainView = findViewById(R.id.main);
+
+        int originalLeft = mainView.getPaddingLeft();
+        int originalTop = mainView.getPaddingTop();
+        int originalRight = mainView.getPaddingRight();
+        int originalBottom = mainView.getPaddingBottom();
+
+        ViewCompat.setOnApplyWindowInsetsListener(
+                mainView,
+                (view, windowInsets) -> {
+
+                    Insets insets = windowInsets.getInsets(
+                            WindowInsetsCompat.Type.statusBars()
+                                    | WindowInsetsCompat.Type.displayCutout()
+                    );
+
+                    view.setPadding(
+                            originalLeft,
+                            originalTop + insets.top,
+                            originalRight,
+                            originalBottom
+                    );
+
+                    return windowInsets;
+                }
+        );
+
+        ViewCompat.requestApplyInsets(mainView);
+
+        WindowInsetsControllerCompat controller =
+                WindowCompat.getInsetsController(
+                        getWindow(),
+                        getWindow().getDecorView()
+                );
+
+        controller.setAppearanceLightStatusBars(true);
+
+        // CONNECT VIEWS
         btnAddIngredient = findViewById(R.id.btnAddIngredient);
-        btnSettings = findViewById(R.id.btnSettings);
-        btnSuggestedRecipes = findViewById(R.id.btnSuggestedRecipes);
 
         listPantry = findViewById(R.id.listPantry);
 
         txtExpiryReminders = findViewById(R.id.txtExpiryReminders);
         txtEmptyPantry = findViewById(R.id.txtEmptyPantry);
 
-        // DISPLAY EMPTY MESSAGE WHEN PANTRY HAS NO ITEMS
         listPantry.setEmptyView(txtEmptyPantry);
 
         // BOTTOM NAVIGATION
@@ -91,37 +130,16 @@ public class MainActivity extends AppCompatActivity {
             return false;
         });
 
+        // DATABASE
         databaseHelper = new DatabaseHelper(this);
         databaseHelper.seedRecipesIfNeeded();
 
-        // ADD INGREDIENT BUTTON
+        // ADD INGREDIENT
         btnAddIngredient.setOnClickListener(v -> {
 
             Intent intent = new Intent(
                     MainActivity.this,
                     AddIngredientActivity.class
-            );
-
-            startActivity(intent);
-        });
-
-        // SUGGESTED RECIPES BUTTON
-        btnSuggestedRecipes.setOnClickListener(v -> {
-
-            Intent intent = new Intent(
-                    MainActivity.this,
-                    SuggestedRecipesActivity.class
-            );
-
-            startActivity(intent);
-        });
-
-        // SETTINGS BUTTON
-        btnSettings.setOnClickListener(v -> {
-
-            Intent intent = new Intent(
-                    MainActivity.this,
-                    SettingsActivity.class
             );
 
             startActivity(intent);
@@ -178,12 +196,9 @@ public class MainActivity extends AppCompatActivity {
         loadIngredients();
     }
 
-    // LOAD PANTRY INGREDIENTS
     private void loadIngredients() {
 
         ingredientList = databaseHelper.getAllIngredients();
-
-
 
         ingredientAdapter = new IngredientAdapter(
                 this,
@@ -192,11 +207,9 @@ public class MainActivity extends AppCompatActivity {
 
         listPantry.setAdapter(ingredientAdapter);
 
-        // REFRESH REMINDERS WHEN PANTRY OPENS
         updateExpiryReminders();
     }
 
-    // CHECK EXPIRY DATES AND SETTINGS
     private void updateExpiryReminders() {
 
         SharedPreferences preferences =
@@ -205,7 +218,6 @@ public class MainActivity extends AppCompatActivity {
         boolean remindersEnabled =
                 preferences.getBoolean(KEY_EXPIRY_REMINDERS, true);
 
-        // HIDE REMINDERS IF DISABLED IN SETTINGS
         if (!remindersEnabled) {
 
             txtExpiryReminders.setVisibility(View.GONE);
@@ -217,7 +229,6 @@ public class MainActivity extends AppCompatActivity {
 
         dateFormat.setLenient(false);
 
-        // GET TODAY'S DATE WITHOUT THE TIME
         Calendar today = Calendar.getInstance();
 
         today.set(Calendar.HOUR_OF_DAY, 0);
@@ -225,7 +236,6 @@ public class MainActivity extends AppCompatActivity {
         today.set(Calendar.SECOND, 0);
         today.set(Calendar.MILLISECOND, 0);
 
-        // CALCULATE THE DATE 7 DAYS FROM NOW
         Calendar sevenDaysLater = (Calendar) today.clone();
 
         sevenDaysLater.add(Calendar.DAY_OF_MONTH, 7);
@@ -237,17 +247,14 @@ public class MainActivity extends AppCompatActivity {
 
         int reminderCount = 0;
 
-        // CHECK EACH PANTRY INGREDIENT
         for (Ingredient ingredient : ingredientList) {
 
             String expiryDate = ingredient.getExpiryDate();
 
-            // SKIP INGREDIENTS WITHOUT AN EXPIRY DATE
             if (expiryDate == null || expiryDate.trim().isEmpty()) {
                 continue;
             }
 
-            // SKIP OLD RECORDS WITH INVALID DATE FORMATS
             if (!expiryDate.matches("\\d{4}-\\d{2}-\\d{2}")) {
                 continue;
             }
@@ -262,7 +269,6 @@ public class MainActivity extends AppCompatActivity {
 
                 String ingredientName = ingredient.getName();
 
-                // ALREADY EXPIRED
                 if (expiry.before(todayDate)) {
 
                     reminderText.append("EXPIRED: ")
@@ -273,7 +279,6 @@ public class MainActivity extends AppCompatActivity {
 
                     reminderCount++;
 
-                    // EXPIRES TODAY
                 } else if (expiry.equals(todayDate)) {
 
                     reminderText.append("EXPIRES TODAY: ")
@@ -282,7 +287,6 @@ public class MainActivity extends AppCompatActivity {
 
                     reminderCount++;
 
-                    // EXPIRES WITHIN THE NEXT 7 DAYS
                 } else if (!expiry.after(reminderLimit)) {
 
                     reminderText.append("EXPIRING SOON: ")
@@ -296,11 +300,10 @@ public class MainActivity extends AppCompatActivity {
 
             } catch (ParseException e) {
 
-                // IGNORE INVALID DATES IN OLDER RECORDS
+                // Ignore invalid dates in older records
             }
         }
 
-        // SHOW OR HIDE THE REMINDER BOX
         if (reminderCount > 0) {
 
             txtExpiryReminders.setText(
@@ -318,3 +321,4 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 }
+

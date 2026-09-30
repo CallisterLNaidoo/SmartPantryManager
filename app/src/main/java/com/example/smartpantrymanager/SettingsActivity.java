@@ -3,9 +3,13 @@ package com.example.smartpantrymanager;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.view.View;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.SwitchCompat;
+import androidx.core.graphics.Insets;
+import androidx.core.view.ViewCompat;
+import androidx.core.view.WindowInsetsCompat;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
@@ -20,6 +24,36 @@ public class SettingsActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_settings);
+
+        // KEEP CONTENT CLEAR OF STATUS BAR AND CAMERA CUTOUT
+        View mainView = findViewById(R.id.main);
+
+        int originalLeft = mainView.getPaddingLeft();
+        int originalTop = mainView.getPaddingTop();
+        int originalRight = mainView.getPaddingRight();
+        int originalBottom = mainView.getPaddingBottom();
+
+        ViewCompat.setOnApplyWindowInsetsListener(
+                mainView,
+                (view, windowInsets) -> {
+
+                    Insets insets = windowInsets.getInsets(
+                            WindowInsetsCompat.Type.statusBars()
+                                    | WindowInsetsCompat.Type.displayCutout()
+                    );
+
+                    view.setPadding(
+                            originalLeft,
+                            originalTop + insets.top,
+                            originalRight,
+                            originalBottom
+                    );
+
+                    return windowInsets;
+                }
+        );
+
+        ViewCompat.requestApplyInsets(mainView);
 
         // SETTINGS PREFERENCES
         switchExpiryReminders =
